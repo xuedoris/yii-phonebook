@@ -10,12 +10,15 @@
  */
 class People extends CActiveRecord
 {
+	/* Set up constant tablename to save memory */
+	const tablename = 'people';
+	
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'people';
+		return self::tablename;
 	}
 
 	/**
@@ -58,23 +61,6 @@ class People extends CActiveRecord
 	}
 
 	/**
-	 * Retrieves all the phone numbers
-	 */
-	public function displayAll()
-	{
-		$phoneinfoModel = new Phoneinfo;
-		$phoneownerModel = new Phoneowner;
-
-		$Criteria = new CDbCriteria();
-		$Criteria->join = 'JOIN '.$phoneinfoModel->tableName().' JOIN '.$phoneownerModel->tableName();
-		$Criteria->order = "lastName ASC";
-		
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$Criteria,
-		));
-	}
-
-	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:
@@ -95,7 +81,8 @@ class People extends CActiveRecord
 		$criteria->compare('pId',$this->pId);
 		$criteria->compare('lastName',$this->lastName,true);
 		$criteria->compare('firstName',$this->firstName,true);
-
+		$criteria->join = 'JOIN '.Phoneinfo::tablename.' JOIN '.Phoneowner::tablename;
+		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

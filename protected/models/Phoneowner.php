@@ -9,12 +9,15 @@
  */
 class Phoneowner extends CActiveRecord
 {
+	/* Set up constant tablename to save memory */
+	const tablename = 'phoneowner';
+
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'phoneowner';
+		return self::tablename;
 	}
 
 	/**
