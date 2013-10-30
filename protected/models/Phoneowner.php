@@ -44,6 +44,8 @@ class Phoneowner extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'ownerInfo'=>array(self::BELONGS_TO, 'People', 'pId'),
+			'pInfo'=>array(self::BELONGS_TO, 'Phoneinfo', 'phoneNumber'),
 		);
 	}
 

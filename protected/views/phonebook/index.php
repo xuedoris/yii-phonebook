@@ -8,29 +8,21 @@ Yii::app()->clientScript->registerScriptFile($jsPath);
 
 
 // This page contains the contact list will be refreshed after each operation.-->
-print_r($model->displayAll());
+print_r($model->phonenumbers);
 /*
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'grid-view',
-    'dataProvider'=>$model->displayAll(),
+    'dataProvider'=>$model->search(),
     'filter'=>$model,
-    'htmlOptions'=>array('style'=>'width:740px'),
     'pager'=>array(
         'maxButtonCount'=>'7',
     ),
     'columns'=>array(
     	'firstName',
     	'lastName',
-    	array(
-            'name'=>'number',
-            'value'=>'$data->country->name'
-        ),
-        array(
+        array('name'=>'phonenumbers.phoneNumber', 'value'=>$model->phonenumbers->phoneNumber),
+        array(            // display a column with "view", "update" and "delete" buttons
             'class'=>'CButtonColumn',
-            'viewButtonUrl'=>'$this->grid->controller->createReturnableUrl("view",array("id"=>$data->id))',
-            'updateButtonUrl'=>'$this->grid->controller->createReturnableUrl("update",array("id"=>$data->id))',
-            'deleteButtonUrl'=>'$this->grid->controller->createReturnableUrl("delete",array("id"=>$data->id))',
-            'deleteConfirmation'=>Yii::t('ui','Are you sure to delete this item?'),
-        ),
+        ),	
     ),
 ));*/
