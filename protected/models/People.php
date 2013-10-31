@@ -47,6 +47,7 @@ class People extends CActiveRecord
 		return array(
 			'phonenumbers'=>array(self::HAS_MANY, 'Phoneowner', 'pId'),
 		);
+
 	}
 
 	/**
@@ -77,15 +78,22 @@ class People extends CActiveRecord
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
-		$criteria=new CDbCriteria;
+		$params = array('firstName' => 'Xue');
 
-		$criteria->compare('pId',$this->pId);
-		$criteria->compare('lastName',$this->lastName,true);
-		$criteria->compare('firstName',$this->firstName,true);
-		$criteria->with = array('phonenumbers');
+		$sql = 'select * from people natural join phoneowner natural join phoneinfo';
 		
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+		return new CSqlDataProvider($sql, array(
+			'sort' => array(
+				'attributes' => array(
+				//'plan' => 'Plan',
+				)
+			),
+			//'totalItemCount' => $count,
+			'pagination' => array(
+				'pageSize' => 10,
+			),
+			'keyField' => 'pId',
+			'params' => $params,
 		));
 	}
 
