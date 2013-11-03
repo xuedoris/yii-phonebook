@@ -12,6 +12,8 @@ class People extends CActiveRecord
 {
 	/* Set up constant tablename to save memory */
 	const tablename = 'people';
+	//public $phoneNumber;
+	//public $phoneType;
 	
 	/**
 	 * @return string the associated database table name
@@ -45,6 +47,8 @@ class People extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'phonenumbers'=>array(self::MANY_MANY, 'Phoneinfo',
+                'phoneowner(pId, phoneNumber)'),
 		);
 	}
 
@@ -81,7 +85,6 @@ class People extends CActiveRecord
 		$criteria->compare('pId',$this->pId);
 		$criteria->compare('lastName',$this->lastName,true);
 		$criteria->compare('firstName',$this->firstName,true);
-		$criteria->join = 'JOIN '.Phoneinfo::tablename.' JOIN '.Phoneowner::tablename;
 		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

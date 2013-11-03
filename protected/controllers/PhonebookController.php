@@ -27,11 +27,11 @@ class PhonebookController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$peopleModel = new People;
+		$model = new Phoneowner;
 
 		// renders the view file 'protected/views/phonebook/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
-		$this->render('index', array('model' => $peopleModel));
+		$this->render('index', array('model' => $model));
 	}
 
 	/**

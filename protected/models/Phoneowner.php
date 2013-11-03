@@ -44,6 +44,10 @@ class Phoneowner extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'getowners'=>array(self::BELONGS_TO, 'People',
+                'pId'),
+			'getnumbers'=>array(self::BELONGS_TO, 'Phoneinfo',
+                'phoneNumber'),
 		);
 	}
 
@@ -78,6 +82,7 @@ class Phoneowner extends CActiveRecord
 
 		$criteria->compare('pId',$this->pId);
 		$criteria->compare('phoneNumber',$this->phoneNumber,true);
+		$criteria->with = array('getowners', 'getnumbers');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
