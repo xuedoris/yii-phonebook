@@ -11,18 +11,30 @@ Yii::app()->clientScript->registerScriptFile($jsPath);
 print_r($model->search());
 
 $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'grid-view',
     'dataProvider'=>$model->search(),
     'filter'=>$model,
     'pager'=>array(
         'maxButtonCount'=>'7',
     ),
     'columns'=>array(
-    	'firstName',
-    	'lastName',
         array(
-            'header' => 'Phone Number',
-            'value' => $data['phoneNumber']
-        )
+            'name' => 'firstName',
+            'value' => '$data->getowners->firstName'
+        ),
+        array(
+            'name' => 'lastName',
+            'value' => '$data->getowners->lastName'
+        ),
+        'phoneNumber',
+        array(
+            'name' => 'phoneType',
+            'value' => '$data->getnumbers->phoneType'
+        ),
+        array(
+            'class'=>'CButtonColumn',
+            'template'=>'{update}{delete}',
+            'updateButtonUrl'=>'$this->grid->controller->createUrl("update",array("id"=>$data->pId))',
+            'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId))'
+        ),
     ),
 ));

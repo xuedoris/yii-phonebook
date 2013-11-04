@@ -11,6 +11,10 @@ class Phoneowner extends CActiveRecord
 {
 	/* Set up constant tablename to save memory */
 	const tablename = 'phoneowner';
+	public $firstName;
+	public $lastName;
+	public $phoneType;
+
 
 	/**
 	 * @return string the associated database table name
@@ -32,7 +36,7 @@ class Phoneowner extends CActiveRecord
 			array('phoneNumber', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pId, phoneNumber', 'safe', 'on'=>'search'),
+			array('firstName, lastName, phoneNumber, phoneType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -44,8 +48,10 @@ class Phoneowner extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ownerInfo'=>array(self::BELONGS_TO, 'People', 'pId'),
-			'pInfo'=>array(self::BELONGS_TO, 'Phoneinfo', 'phoneNumber'),
+			'getowners'=>array(self::BELONGS_TO, 'People',
+                'pId'),
+			'getnumbers'=>array(self::BELONGS_TO, 'Phoneinfo',
+                'phoneNumber'),
 		);
 	}
 
@@ -78,8 +84,11 @@ class Phoneowner extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('pId',$this->pId);
+		$criteria->compare('firstName',$this->firstName,true);
+		$criteria->compare('lastName',$this->lastName,true);
 		$criteria->compare('phoneNumber',$this->phoneNumber,true);
+		$criteria->compare('phoneType',$this->phoneType,true);
+		$criteria->with = array('getowners', 'getnumbers');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

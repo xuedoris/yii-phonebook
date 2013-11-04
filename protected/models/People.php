@@ -12,6 +12,8 @@ class People extends CActiveRecord
 {
 	/* Set up constant tablename to save memory */
 	const tablename = 'people';
+	//public $phoneNumber;
+	//public $phoneType;
 	
 	/**
 	 * @return string the associated database table name
@@ -45,7 +47,8 @@ class People extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'phonenumbers'=>array(self::HAS_MANY, 'Phoneowner', 'pId'),
+			'phonenumbers'=>array(self::MANY_MANY, 'Phoneinfo',
+                'phoneowner(pId, phoneNumber)'),
 		);
 
 	}
@@ -77,20 +80,14 @@ class People extends CActiveRecord
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
-		$sql = 'select * from people natural join phoneowner natural join phoneinfo';
+		$criteria=new CDbCriteria;
 		
-		return new CSqlDataProvider($sql, array(
-			'sort' => array(
-				'attributes' => array(
-				//'plan' => 'Plan',
-				)
-			),
-			//'totalItemCount' => $count,
-			'pagination' => array(
-				'pageSize' => 10,
-			),
-			'keyField' => 'pId',
-			//'params' => $params,
+		$criteria->compare('pId',$this->pId);
+		$criteria->compare('lastName',$this->lastName,true);
+		$criteria->compare('firstName',$this->firstName,true);
+		
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
 		));
 	}
 
