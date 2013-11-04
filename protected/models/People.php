@@ -77,9 +77,6 @@ class People extends CActiveRecord
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
-
-		$params = array('firstName' => 'Xue');
-
 		$sql = 'select * from people natural join phoneowner natural join phoneinfo';
 		
 		return new CSqlDataProvider($sql, array(
@@ -93,7 +90,7 @@ class People extends CActiveRecord
 				'pageSize' => 10,
 			),
 			'keyField' => 'pId',
-			'params' => $params,
+			//'params' => $params,
 		));
 	}
 

@@ -8,6 +8,7 @@ Yii::app()->clientScript->registerScriptFile($jsPath);
 
 
 // This page contains the contact list will be refreshed after each operation.-->
+print_r($model->search());
 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'grid-view',
@@ -18,6 +19,10 @@ $this->widget('zii.widgets.grid.CGridView', array(
     ),
     'columns'=>array(
     	'firstName',
-    	'lastName'
+    	'lastName',
+        array(
+            'header' => 'Phone Number',
+            'value' => $data['phoneNumber']
+        )
     ),
 ));
