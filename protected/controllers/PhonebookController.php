@@ -27,8 +27,9 @@ class PhonebookController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model = new Phoneowner;
-
+		$model = new Phoneowner('search');
+		if (isset($_GET['Phoneowner']))
+			$model->attributes=$_GET['Phoneowner'];
 		// renders the view file 'protected/views/phonebook/index.php'
 		// using the default layout 'protected/views/layouts/main.php'
 		$this->render('index', array('model' => $model));

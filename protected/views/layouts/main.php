@@ -33,7 +33,8 @@
 				array('label'=>'About', 'url'=>array('/phonebook/page', 'view'=>'about')),
 				array('label'=>'Contact', 'url'=>array('/phonebook/contact')),
 				array('label'=>'Login', 'url'=>array('/phonebook/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/phonebook/logout'), 'visible'=>!Yii::app()->user->isGuest)
+				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/phonebook/logout'), 'visible'=>!Yii::app()->user->isGuest),
+				array('label'=>'jQuery zone', 'url'=>array('/phonebook/page', 'view'=>'jQuery'))
 			),
 		)); ?>
 	</div><!-- mainmenu -->
