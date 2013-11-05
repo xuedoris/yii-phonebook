@@ -87,12 +87,31 @@ class Phoneowner extends CActiveRecord
 
 		$criteria->compare('firstName',$this->firstName,true);
 		$criteria->compare('lastName',$this->lastName,true);
-		$criteria->compare('phoneNumber',$this->phoneNumber,true);
+		// default table alias is 't'. Specify 't' because phoneNumber exists in both people table and phoneowner table
+		$criteria->compare('t.phoneNumber',$this->phoneNumber,true);
 		$criteria->compare('phoneType',$this->phoneType,true);
 		$criteria->with = array('getowners', 'getnumbers');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort' => array(
+	            'defaultOrder' => 'firstName',
+	            'attributes' => array(
+	                'firstName' => array(
+	                    'asc' => 'getowners.firstName',
+	                    'desc' => 'getowners.firstName desc',
+	                ),
+	                'lastName' => array(
+	                    'asc' => 'getowners.lastName',
+	                    'desc' => 'getowners.lastName desc',
+	                ),
+	                'phoneType' => array(
+	                    'asc' => 'getnumbers.phoneType',
+	                    'desc' => 'getnumbers.phoneType desc',
+	                ),
+	                '*'
+	            ),
+	        ),
 		));
 	}
 

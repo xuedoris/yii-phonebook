@@ -27,7 +27,8 @@ $this->widget('zii.widgets.grid.CGridView', array(
         'phoneNumber',
         array(
             'name' => 'phoneType',
-            'value' => '$data->getnumbers->phoneType'
+            'value' => '$data->getnumbers->phoneType',
+            'filter' => array('other'=> 'Other','home' => 'Home','office' => 'Office','mobile' => 'Mobile')
         ),
         array(
             'class'=>'CButtonColumn',
