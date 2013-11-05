@@ -36,6 +36,17 @@ class PhonebookController extends Controller
 	}
 
 	/**
+	 * This is the 'addnew' action to add a new contact
+	 */
+	public function actionAddnew()
+	{
+		$phoneownerModel = new Phoneowner;
+		$peopleModel = new People;
+		$phoneinfoModel = new Phoneinfo;
+		
+	}
+
+	/**
 	 * This is the action to handle external exceptions.
 	 */
 	public function actionError()

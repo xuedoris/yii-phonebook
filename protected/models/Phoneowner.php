@@ -32,8 +32,9 @@ class Phoneowner extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('phoneNumber', 'required'),
+			array('firstName, lastName, phoneType, phoneNumber', 'required'),
 			array('phoneNumber', 'length', 'max'=>20),
+			array('phoneNumber', 'numerical', 'on'=>array('insert', 'update')),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('firstName, lastName, phoneNumber, phoneType', 'safe', 'on'=>'search'),
