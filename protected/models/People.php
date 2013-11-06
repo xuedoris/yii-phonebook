@@ -35,7 +35,7 @@ class People extends CActiveRecord
 			array('lastName, firstName', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pId, lastName, firstName', 'safe', 'on'=>'search'),
+			array('lastName, firstName', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -63,6 +63,29 @@ class People extends CActiveRecord
 			'lastName' => 'Last Name',
 			'firstName' => 'First Name',
 		);
+	}
+
+	/**
+	 * Insert a new owner into the database.
+	 */
+	public function addNewOwner($first, $last)
+	{
+		$model=self::model();
+
+	    // find and save are two steps which may be intervened by another request
+	    // we therefore use a transaction to ensure consistency and integrity	
+    	$pId = $model->findByAttributes(array('firstName'=>$first,'lastName'=>$last))->getPrimaryKey();
+    	if($pId){
+    		$transaction->commit();
+	    	return 
+    	} else{
+    		$transaction->rollback();
+    		return false;
+    	}
+    	$model->firstName = $first;
+    	$model->lastName = $last;
+    	   
+
 	}
 
 	/**

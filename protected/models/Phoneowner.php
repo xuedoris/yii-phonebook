@@ -80,8 +80,35 @@ class Phoneowner extends CActiveRecord
 			$pId = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName))->getPrimaryKey();
 			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneNumber'=>$this->phoneNumber));
 			if($contact){
-				$this->addError($attribute, 'This contact has already existed.');
+				$this->addError($attribute, 'This contact already exists.');
 			}
+		}
+	}
+
+	/**
+	 * Insert a new contact into the database.
+	 * According to 4 cases
+	 */
+	public function addNewContact()
+	{
+		$model=self::model();
+		$transaction=$model->dbConnection->beginTransaction();
+		try
+		{
+		    // find and save are two steps which may be intervened by another request
+		    // we therefore use a transaction to ensure consistency and integrity	
+	    	$model->pId = $this->phoneNumber;
+	    	$model->getnumbers->phoneType = $this->phoneType;
+	    	$model->getnumbers->save();
+	    	if($model->save())
+		        $transaction->commit();
+		    else
+		        $transaction->rollback();
+		}
+		catch(Exception $e)
+		{
+		    $transaction->rollback();
+		    throw $e;
 		}
 	}
 

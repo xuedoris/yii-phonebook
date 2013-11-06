@@ -39,6 +39,27 @@
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Add contact'); ?>
+		<?php /*echo CHtml::ajaxSubmitButton('Add contact',CHtml::normalizeUrl(array('phonebook/addnew','render'=>true)),
+                 array(
+                     'dataType'=>'json',
+                     'type'=>'post',
+                     'success'=>'function(data) {
+                         $("#AjaxLoader").hide();  
+                        if(data.status=="success"){
+                         $("#formResult").html("Contact added successfully.");
+                         $("#addnew-form")[0].reset();
+                        } else {
+                        $.each(data, function(key, val) {
+                        $("#addnew-form #"+key+"_em_").text(val);                                                    
+                        $("#addnew-form #"+key+"_em_").show();
+                        });
+                        }       
+                    }',                    
+                     'beforeSend'=>'function(){                        
+                           $("#AjaxLoader").show();
+                      }'
+                     ),array('id'=>'mybtn','class'=>'class1 class2')); 
+        */?>
 		<?php echo CHtml::resetButton('Reset'); ?>
 	</div>
 

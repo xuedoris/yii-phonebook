@@ -40,14 +40,20 @@ class PhonebookController extends Controller
 	 */
 	public function actionAddnew()
 	{
-		$phoneownerModel = new Phoneowner;
-		$peopleModel = new People;
-		$phoneinfoModel = new Phoneinfo;
+		$model = new Phoneowner;
 		// if it is ajax validation request
 		if(isset($_POST['ajax']) && $_POST['ajax']==='addnew-form')
 		{
-			echo CActiveForm::validate($phoneownerModel);
+			echo CActiveForm::validate($model);
 			Yii::app()->end();
+		}
+		// collect user input data
+		if(isset($_POST['Phoneowner']))
+		{
+			$model->attributes=$_POST['Phoneowner'];
+			// validate user input and redirect to the previous page if valid
+			if($model->validate() && $model->addNewContact())
+				$this->redirect(Yii::app()->user->returnUrl);
 		}
 	}
 
