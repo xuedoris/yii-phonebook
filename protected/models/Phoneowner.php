@@ -35,6 +35,8 @@ class Phoneowner extends CActiveRecord
 			array('firstName, lastName, phoneType, phoneNumber', 'required'),
 			array('phoneNumber', 'length', 'max'=>20),
 			array('phoneNumber', 'numerical', 'on'=>array('insert', 'update')),
+			array('firstName, lastName, phoneNumber', 'is_exist'),
+			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('firstName, lastName, phoneNumber, phoneType', 'safe', 'on'=>'search'),
@@ -65,6 +67,22 @@ class Phoneowner extends CActiveRecord
 			'pId' => 'P',
 			'phoneNumber' => 'Phone Number',
 		);
+	}
+
+	/**
+	 * Check if the contact has already existed.
+	 * This is the 'is_exist' validator as declared in rules().
+	 */
+	public function is_exist($attribute,$params)
+	{
+		if(!$this->hasErrors())
+		{
+			$pId = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName))->getPrimaryKey();
+			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneNumber'=>$this->phoneNumber));
+			if($contact){
+				$this->addError($attribute, 'This contact has already existed.');
+			}
+		}
 	}
 
 	/**

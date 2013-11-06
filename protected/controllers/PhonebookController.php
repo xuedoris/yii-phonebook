@@ -43,7 +43,12 @@ class PhonebookController extends Controller
 		$phoneownerModel = new Phoneowner;
 		$peopleModel = new People;
 		$phoneinfoModel = new Phoneinfo;
-		
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='addnew-form')
+		{
+			echo CActiveForm::validate($phoneownerModel);
+			Yii::app()->end();
+		}
 	}
 
 	/**

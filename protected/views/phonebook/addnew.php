@@ -3,7 +3,8 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'addnew-form',
 	'enableClientValidation'=>true,
-	'action' => $this->createUrl( 'phonebook/index' ),
+	'enableAjaxValidation' => true,
+	'action' => $this->createUrl( 'phonebook/addnew' ),
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
 	),
