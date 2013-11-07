@@ -11,6 +11,7 @@
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
+	<p><?php echo CHtml::errorSummary($model);?></p>
 	<div class="row">
 		<?php echo $form->labelEx($model,'firstName'); ?>
 		<?php echo $form->textField($model,'firstName'); ?>

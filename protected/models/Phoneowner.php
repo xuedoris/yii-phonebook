@@ -35,7 +35,7 @@ class Phoneowner extends CActiveRecord
 			array('firstName, lastName, phoneType, phoneNumber', 'required'),
 			array('phoneNumber', 'length', 'max'=>20),
 			array('phoneNumber', 'numerical', 'on'=>array('insert', 'update')),
-			array('firstName, lastName, phoneNumber', 'is_exist'),
+			array('firstName', 'is_exist'),
 			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -75,14 +75,11 @@ class Phoneowner extends CActiveRecord
 	 */
 	public function is_exist($attribute,$params)
 	{
-		if(!$this->hasErrors())
-		{
 			$pId = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName))->getPrimaryKey();
 			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneNumber'=>$this->phoneNumber));
 			if($contact){
-				$this->addError($attribute, 'This contact already exists.');
+				$this->addError('firstName', 'This contact already exists.');
 			}
-		}
 	}
 
 	/**
@@ -91,6 +88,7 @@ class Phoneowner extends CActiveRecord
 	 */
 	public function addNewContact()
 	{
+		
 		$model=self::model();
 		$transaction=$model->dbConnection->beginTransaction();
 		try
@@ -139,6 +137,7 @@ class Phoneowner extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			/*
 			'sort' => array(
 	            'defaultOrder' => 'firstName',
 	            'attributes' => array(
@@ -156,7 +155,7 @@ class Phoneowner extends CActiveRecord
 	                ),
 	                '*'
 	            ),
-	        ),
+	        ),*/
 		));
 	}
 

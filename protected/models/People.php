@@ -70,22 +70,20 @@ class People extends CActiveRecord
 	 */
 	public function addNewOwner($first, $last)
 	{
-		$model=self::model();
-
 	    // find and save are two steps which may be intervened by another request
 	    // we therefore use a transaction to ensure consistency and integrity	
-    	$pId = $model->findByAttributes(array('firstName'=>$first,'lastName'=>$last))->getPrimaryKey();
+    	$pId = self::model()->findByAttributes(array('firstName'=>$first,'lastName'=>$last))->getPrimaryKey();
     	if($pId){
-    		$transaction->commit();
-	    	return 
+    		return $pId;
     	} else{
-    		$transaction->rollback();
-    		return false;
+    		$model = new People;
+	    	$model->firstName = $first;
+	    	$model->lastName = $last;
+	    	if($model->save()){
+	    		return $model->pId;
+	    	}
     	}
-    	$model->firstName = $first;
-    	$model->lastName = $last;
-    	   
-
+    	return null;
 	}
 
 	/**
