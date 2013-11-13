@@ -72,9 +72,10 @@ class People extends CActiveRecord
 	{
 	    // find and save are two steps which may be intervened by another request
 	    // we therefore use a transaction to ensure consistency and integrity	
-    	$pId = self::model()->findByAttributes(array('firstName'=>$first,'lastName'=>$last))->getPrimaryKey();
-    	if($pId){
-    		return $pId;
+    	$owner = self::model()->findByAttributes(array('firstName'=>$first,'lastName'=>$last));
+    	
+    	if($owner){
+    		return $owner->getPrimaryKey();
     	} else{
     		$model = new People;
 	    	$model->firstName = $first;

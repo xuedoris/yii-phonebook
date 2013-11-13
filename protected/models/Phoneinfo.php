@@ -65,25 +65,13 @@ class Phoneinfo extends CActiveRecord
 	 * Insert a new number into the database.
 	 */
 	public function addNewNumber($number, $type)
-	{
-		$model=self::model();
-		$transaction=$model->dbConnection->beginTransaction();
-		try
-		{
-		    // find and save are two steps which may be intervened by another request
-		    // we therefore use a transaction to ensure consistency and integrity	
-	    	$model->phoneNumber = $number;
+	{	
+    	if(self::model()->findByPk($number) == NULL){
+    		$model = new Phoneinfo;
+		    $model->phoneNumber = $number;
 	    	$model->phoneType = $type;
-	    	if($model->save())
-		        $transaction->commit();
-		    else
-		        $transaction->rollback();
-		}
-		catch(Exception $e)
-		{
-		    $transaction->rollback();
-		    throw $e;
-		}
+	    	$model->save();
+    	}
 	}
 
 	/**

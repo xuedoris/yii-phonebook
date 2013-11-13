@@ -12,6 +12,7 @@
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
 	<p><?php echo CHtml::errorSummary($model);?></p>
+	<div class="errorMessage" id="formResult"></div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'firstName'); ?>
 		<?php echo $form->textField($model,'firstName'); ?>
@@ -39,8 +40,8 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Add contact'); ?>
-		<?php /*echo CHtml::ajaxSubmitButton('Add contact',CHtml::normalizeUrl(array('phonebook/addnew','render'=>true)),
+		<?php //echo CHtml::submitButton('Add contact'); ?>
+		<?php echo CHtml::ajaxSubmitButton('Add contact',CHtml::normalizeUrl(array('phonebook/addnew','render'=>true)),
                  array(
                      'dataType'=>'json',
                      'type'=>'post',
@@ -60,8 +61,9 @@
                            $("#AjaxLoader").show();
                       }'
                      ),array('id'=>'mybtn','class'=>'class1 class2')); 
-        */?>
+        ?>
 		<?php echo CHtml::resetButton('Reset'); ?>
+		<div id="AjaxLoader" style="display: none"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/loading.gif"></img></div>
 	</div>
 
 <?php $this->endWidget(); ?>

@@ -75,11 +75,16 @@ class Phoneowner extends CActiveRecord
 	 */
 	public function is_exist($attribute,$params)
 	{
-			$pId = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName))->getPrimaryKey();
+		$person = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName));
+		if ($person) {
+			$pId = $person->getPrimaryKey();
 			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneNumber'=>$this->phoneNumber));
 			if($contact){
 				$this->addError('firstName', 'This contact already exists.');
 			}
+		} else {
+			return true;
+		}
 	}
 
 	/**
@@ -89,19 +94,32 @@ class Phoneowner extends CActiveRecord
 	public function addNewContact()
 	{
 		
-		$model=self::model();
+		$model=new Phoneowner;
 		$transaction=$model->dbConnection->beginTransaction();
 		try
 		{
-		    // find and save are two steps which may be intervened by another request
+		    // Save into 3 tables may be intervened by another request
 		    // we therefore use a transaction to ensure consistency and integrity	
-	    	$model->pId = $this->phoneNumber;
-	    	$model->getnumbers->phoneType = $this->phoneType;
-	    	$model->getnumbers->save();
+	    	/* Save into table phoneinfo */
+	    	Phoneinfo::model()->addNewNumber($this->phoneNumber, $this->phoneType);
+	    	/* Save into table people */
+	    	$pId = People::model()->addNewOwner($this->firstName, $this->lastName);
+	    	/* Save into table phoneowner */
+	    	// Not sure if this is the right way to save relational data.
+	    	$model->firstName = $this->firstName;
+	    	$model->lastName = $this->lastName;
+	    	$model->phoneType = $this->phoneType;
+
+	    	$model->pId = $pId;
+	    	$model->phoneNumber = $this->phoneNumber;
 	    	if($model->save())
+	    	{
 		        $transaction->commit();
-		    else
-		        $transaction->rollback();
+		    }
+		    else{
+		    	Yii::log("errors saving phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    	$transaction->rollback();
+		    }     
 		}
 		catch(Exception $e)
 		{
