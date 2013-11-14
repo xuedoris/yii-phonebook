@@ -34,8 +34,9 @@ $this->widget('zii.widgets.grid.CGridView', array(
         array(
             'class'=>'CButtonColumn',
             'template'=>'{update}{delete}',
-            'updateButtonUrl'=>'$this->grid->controller->createUrl("update",array("id"=>$data->pId))',
+            'updateButtonUrl'=>'',
             'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId, "number"=>$data->phoneNumber))'
         ),
     ),
 ));
+
