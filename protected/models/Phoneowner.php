@@ -138,11 +138,11 @@ class Phoneowner extends CActiveRecord
 		$transaction=$model->dbConnection->beginTransaction();
 		try
 		{
-			$people = $model->findByAttributes(array('pId'=>$id));
+			$people = $model->findAllByAttributes(array('pId'=>$id));
 		    if(count($people) == 1){
 		    	People::model()->deleteOwner($id);
 		    }
-		    $numbers = $model->findByAttributes(array('phoneNumber'=>$number));
+		    $numbers = $model->findAllByAttributes(array('phoneNumber'=>$number));
 		    if(count($numbers) == 1){
 		    	Phoneinfo::model()->deleteNumber($number);
 		    }

@@ -48,13 +48,14 @@
                      'success'=>'function(data) {
                          $("#AjaxLoader").hide();  
                         if(data.status=="success"){
-                         $("#formResult").html("Contact added successfully.");
-                         $("#addnew-form")[0].reset();
+	                        $("#formResult").html("Contact added successfully.");
+	                        $("#addnew-form")[0].reset();
+	                        $("#grid-form").yiiGridView("update");
                         } else {
-                        $.each(data, function(key, val) {
-                        $("#addnew-form #"+key+"_em_").text(val);                                                    
-                        $("#addnew-form #"+key+"_em_").show();
-                        });
+	                        $.each(data, function(key, val) {
+	                        	$("#addnew-form #"+key+"_em_").text(val);                                                    
+	                        	$("#addnew-form #"+key+"_em_").show();
+	                        });
                         }       
                     }',                    
                      'beforeSend'=>'function(){                        
