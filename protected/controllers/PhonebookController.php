@@ -64,6 +64,23 @@ class PhonebookController extends Controller
 	}
 
 	/**
+	 * This is the 'delete' action to delete a contact
+	 */
+	public function actionDelete($id, $number)
+	{
+		$model = new Phoneowner;
+		// collect user input data
+		if(isset($id))
+		{
+			$model->deleteContact($id, $number);
+			echo CJSON::encode(array(
+                  'status'=>'success'
+             ));
+            Yii::app()->end();
+		}
+	}
+
+	/**
 	 * This is the action to handle external exceptions.
 	 */
 	public function actionError()

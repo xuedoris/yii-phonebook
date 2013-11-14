@@ -129,6 +129,40 @@ class Phoneowner extends CActiveRecord
 	}
 
 	/**
+	 * Delete a contact from the database.
+	 */
+	public function deleteContact($id, $number)
+	{
+		
+		$model=self::model();
+		$transaction=$model->dbConnection->beginTransaction();
+		try
+		{
+			$people = $model->findByAttributes(array('pId'=>$id));
+		    if(count($people) == 1){
+		    	People::model()->deleteOwner($id);
+		    }
+		    $numbers = $model->findByAttributes(array('phoneNumber'=>$number));
+		    if(count($numbers) == 1){
+		    	Phoneinfo::model()->deleteNumber($number);
+		    }
+	    	if($model->deleteByPk(array('pId'=>$id, 'phoneNumber'=>$number)))
+	    	{
+		        $transaction->commit();
+		    }
+		    else{
+		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    	$transaction->rollback();
+		    }     
+		}
+		catch(Exception $e)
+		{
+		    $transaction->rollback();
+		    throw $e;
+		}
+	}
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:
@@ -155,7 +189,6 @@ class Phoneowner extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
-			/*
 			'sort' => array(
 	            'defaultOrder' => 'firstName',
 	            'attributes' => array(
@@ -173,7 +206,7 @@ class Phoneowner extends CActiveRecord
 	                ),
 	                '*'
 	            ),
-	        ),*/
+	        ),
 		));
 	}
 

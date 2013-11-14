@@ -75,6 +75,16 @@ class Phoneinfo extends CActiveRecord
 	}
 
 	/**
+	 * Delete a number into the database.
+	 */
+	public function deleteNumber($number)
+	{	
+    	if(self::model()->findByPk($number) !== NULL){
+    		self::model()->deleteByPk($number);
+    	}
+	}
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:

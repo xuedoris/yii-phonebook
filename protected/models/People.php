@@ -88,6 +88,16 @@ class People extends CActiveRecord
 	}
 
 	/**
+	 * Delete a owner from the database.
+	 */
+	public function deleteOwner($pId)
+	{
+	    if(self::model()->findByPk($pId) !== NULL){
+    		self::model()->deleteByPk($pId);
+    	}
+	}
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:

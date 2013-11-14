@@ -10,6 +10,7 @@ Yii::app()->clientScript->registerScriptFile($jsPath);
 // This page contains the contact list will be refreshed after each operation.-->
 
 $this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'grid-form',
     'dataProvider'=>$model->search(),
     'filter'=>$model,
     'pager'=>array(
@@ -34,7 +35,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'class'=>'CButtonColumn',
             'template'=>'{update}{delete}',
             'updateButtonUrl'=>'$this->grid->controller->createUrl("update",array("id"=>$data->pId))',
-            'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId))'
+            'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId, "number"=>$data->phoneNumber))'
         ),
     ),
 ));
