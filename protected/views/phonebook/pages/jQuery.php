@@ -60,7 +60,7 @@ jQuery(document).ready( function () {
 	/**Write and Change**/
 	jQuery('.change').dblclick( function (){
 		var currentHtml = jQuery(this).html();
-		var inputHtml = '<textarea id="write-change">'+currentHtml+'</textarea>';
+		var inputHtml = '<input id="write-change" value="'+currentHtml+'">';
 		jQuery(this).empty().html(inputHtml);
 		jQuery('#write-change').blur( function () {
 			jQuery(this).addClass('blur');
