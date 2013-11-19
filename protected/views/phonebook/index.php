@@ -33,9 +33,17 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'class'=>'CButtonColumn',
-            'template'=>'{update}{delete}',
+            'template'=>'{update}{delete}{save}',
             'updateButtonUrl'=>'',
-            'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId, "number"=>$data->phoneNumber))'
+            'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId, "number"=>$data->phoneNumber))',
+            'buttons' => array(
+                'save' => array(
+                    'label'=>'Save update',
+                    'options'=>array('class'=>'save hidden'),
+                    'imageUrl'=>Yii::app()->request->baseUrl.'/images/save.gif',
+                    'url'=>'Yii::app()->createUrl("phonebook/update", array("id"=>$data->pId))',
+                )
+            ),
         ),
     ),
 ));
