@@ -13,7 +13,17 @@ jQuery(function($) {
 				$(this).empty().html(newHtml);
 			});
 			$(this).addClass('hidden');
+			$('#grid-form').yiiGridView('update', {
+                type:'POST',
+                url:$(this).attr('href'),
+                success:function(data) {
+                      $('#grid-form').yiiGridView('update');
+                }
+            });
 			return false;
 		});
 	});
 });
+
+
+                        
