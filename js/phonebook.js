@@ -10,6 +10,7 @@ jQuery(function($) {
 			$(this).parent().siblings().each(function (){
 				var newHtml = $(this).find('input').val();
 				//console.log(newHtml);
+				//Check if the value is changed
 				$(this).empty().html(newHtml);
 			});
 			$(this).addClass('hidden');

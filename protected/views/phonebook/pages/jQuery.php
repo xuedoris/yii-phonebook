@@ -8,9 +8,11 @@ $this->breadcrumbs=array(
 Yii::app()->clientScript->registerCoreScript('jquery');
 $cssPath = Yii::app()->baseUrl.'/css/jQuery.css';
 Yii::app()->clientScript->registerCSSFile($cssPath);
+Yii::app()->YiiBalls->register();
 ?>
 <h1>jQuery Play Zone</h1>
-<p id="para">This page is for Xueyuan to learn and practice jQuery.</p>
+<button id="trigger">Trigger</button>
+<p id="para">This page is for Xueyuan to learn and practice jQuery. Curabitur risus nisi, tempus vitae tortor et, dignissim malesuada erat. Ut blandit condimentum ligula, non pharetra lorem laoreet a. Duis volutpat orci a dolor ultricies sollicitudin. Nunc sollicitudin mattis ipsum non blandit.</p>
 <div class="grid-view">
 <table class="items">
 	<thead>
@@ -46,15 +48,23 @@ Yii::app()->clientScript->registerCSSFile($cssPath);
 </table>
 </div>
 
-<button id="trigger">Trigger</button>
 <input type="button" id="clickable" value="Clickable in 10 seconds"/>
 <div class="change">
 Write and Change
 </div>
+<?php
+$this->widget('YiiBalls.widgets.DButton', array(
+'buttonStyle' => 'pretty',
+'type' => 'success',
+'size' => 'large',
+'label' => 'Save',
+'icon' => 'ok',
+));
+?>
 <script type="text/javascript">
 jQuery(document).ready( function () {
 	jQuery('#trigger').click( function (){
-		
+		jQuery('#para').stop().slideToggle(1000);
 	});
 
 	/**Write and Change**/
