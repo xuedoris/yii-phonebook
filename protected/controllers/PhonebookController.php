@@ -64,6 +64,30 @@ class PhonebookController extends Controller
 	}
 
 	/**
+	 * This is the 'update' action to add a new contact
+	 */
+	public function actionUpdate()
+	{
+		$model = new Phoneowner;
+
+		echo CActiveForm::validate($model);
+		Yii::app()->end();
+		// collect user input data
+		if(isset($_POST['Phoneowner']))
+		{
+			$model->attributes=$_POST['Phoneowner'];
+			// validate user input and redirect to the previous page if valid
+			if($model->validate()){
+				$model->addNewContact();
+				echo CJSON::encode(array(
+                      'status'=>'success'
+                 ));
+                Yii::app()->end();
+			}
+		}
+	}
+
+	/**
 	 * This is the 'delete' action to delete a contact
 	 */
 	public function actionDelete($id, $number)
