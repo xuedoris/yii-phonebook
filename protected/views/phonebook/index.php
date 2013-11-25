@@ -6,7 +6,6 @@ Yii::app()->clientScript->registerCoreScript('jquery');
 $jsPath = Yii::app()->baseUrl.'/js/phonebook.js';
 Yii::app()->clientScript->registerScriptFile($jsPath);
 
-
 // This page contains the contact list will be refreshed after each operation.-->
 
 $this->widget('zii.widgets.grid.CGridView', array(

@@ -1,4 +1,4 @@
-<h1>Add New Contact</h1>
+<h3>Add New Contact</h3>
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'addnew-form',
@@ -68,5 +68,4 @@
 	</div>
 
 <?php $this->endWidget(); ?>
-
 </div><!-- form -->
