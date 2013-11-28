@@ -18,24 +18,35 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'columns'=>array(
         array(
             'name' => 'firstName',
-            'value' => '$data->getowners->firstName'
+            'value' => '$data->p->firstName',
+            'htmlOptions'=>array('class'=>'firstName'),
         ),
+        
         array(
             'name' => 'lastName',
-            'value' => '$data->getowners->lastName'
+            'value' => '$data->p->lastName',
+            'htmlOptions'=>array('class'=>'lastName'),
         ),
-        'phoneNumber',
+        array(
+            'name' => 'phoneNumber',
+            'value' => '$data->phone->phoneNumber',
+            'htmlOptions'=>array('class'=>'phoneNumber'),
+        ),
         array(
             'name' => 'phoneType',
-            'value' => '$data->getnumbers->phoneType',
-            'filter' => array('other'=> 'Other','home' => 'Home','office' => 'Office','mobile' => 'Mobile')
+            'value' => '$data->phone->phoneType',
+            'filter' => array('other'=> 'Other','home' => 'Home','office' => 'Office','mobile' => 'Mobile'),
+            'htmlOptions'=>array('class'=>'phoneType'),
         ),
         array(
             'class'=>'CButtonColumn',
             'template'=>'{update}{delete}{save}',
-            'updateButtonUrl'=>'',
             'deleteButtonUrl'=>'$this->grid->controller->createUrl("delete",array("id"=>$data->pId, "number"=>$data->phoneNumber))',
             'buttons' => array(
+                'update' => array(
+                    'options'=>array('onclick'=>'updateContact(this)'),
+                    'url'=>'',
+                ),
                 'save' => array(
                     'label'=>'Save update',
                     'options'=>array('class'=>'save hidden'),

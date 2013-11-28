@@ -4,20 +4,21 @@
  * This is the model class for table "phoneinfo".
  *
  * The followings are the available columns in table 'phoneinfo':
+ * @property integer $phoneId
  * @property string $phoneNumber
  * @property string $phoneType
+ *
+ * The followings are the available model relations:
+ * @property People[] $peoples
  */
 class Phoneinfo extends CActiveRecord
 {
-	/* Set up constant tablename to save memory */
-	const tablename = 'phoneinfo';
-
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return self::tablename;
+		return 'phoneinfo';
 	}
 
 	/**
@@ -33,7 +34,7 @@ class Phoneinfo extends CActiveRecord
 			array('phoneType', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('phoneNumber, phoneType', 'safe', 'on'=>'search'),
+			array('phoneId, phoneNumber, phoneType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,8 +46,7 @@ class Phoneinfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'owners'=>array(self::MANY_MANY, 'People',
-                'phoneowner(pId, phoneNumber)'),
+			'peoples' => array(self::MANY_MANY, 'People', 'phoneowner(phoneId, pId)'),
 		);
 	}
 
@@ -56,32 +56,10 @@ class Phoneinfo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
+			'phoneId' => 'Phone',
 			'phoneNumber' => 'Phone Number',
 			'phoneType' => 'Phone Type',
 		);
-	}
-
-	/**
-	 * Insert a new number into the database.
-	 */
-	public function addNewNumber($number, $type)
-	{	
-    	if(self::model()->findByPk($number) == NULL){
-    		$model = new Phoneinfo;
-		    $model->phoneNumber = $number;
-	    	$model->phoneType = $type;
-	    	$model->save();
-    	}
-	}
-
-	/**
-	 * Delete a number into the database.
-	 */
-	public function deleteNumber($number)
-	{	
-    	if(self::model()->findByPk($number) !== NULL){
-    		self::model()->deleteByPk($number);
-    	}
 	}
 
 	/**
@@ -102,6 +80,7 @@ class Phoneinfo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
+		$criteria->compare('phoneId',$this->phoneId);
 		$criteria->compare('phoneNumber',$this->phoneNumber,true);
 		$criteria->compare('phoneType',$this->phoneType,true);
 

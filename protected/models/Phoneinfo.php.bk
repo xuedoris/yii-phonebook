@@ -1,24 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "people".
+ * This is the model class for table "phoneinfo".
  *
- * The followings are the available columns in table 'people':
- * @property integer $pId
- * @property string $lastName
- * @property string $firstName
- *
- * The followings are the available model relations:
- * @property Phoneinfo[] $phoneinfos
+ * The followings are the available columns in table 'phoneinfo':
+ * @property string $phoneNumber
+ * @property string $phoneType
  */
-class People extends CActiveRecord
+class Phoneinfo extends CActiveRecord
 {
+	/* Set up constant tablename to save memory */
+	const tablename = 'phoneinfo';
+
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'people';
+		return self::tablename;
 	}
 
 	/**
@@ -29,11 +28,12 @@ class People extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('lastName, firstName', 'required'),
-			array('lastName, firstName', 'length', 'max'=>50),
+			array('phoneNumber, phoneType', 'required'),
+			array('phoneNumber', 'length', 'max'=>20),
+			array('phoneType', 'length', 'max'=>15),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('pId, lastName, firstName', 'safe', 'on'=>'search'),
+			array('phoneNumber, phoneType', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,7 +45,8 @@ class People extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'phoneinfos' => array(self::MANY_MANY, 'Phoneinfo', 'phoneowner(pId, phoneId)'),
+			'owners'=>array(self::MANY_MANY, 'People',
+                'phoneowner(pId, phoneNumber)'),
 		);
 	}
 
@@ -55,10 +56,32 @@ class People extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'pId' => 'P',
-			'lastName' => 'Last Name',
-			'firstName' => 'First Name',
+			'phoneNumber' => 'Phone Number',
+			'phoneType' => 'Phone Type',
 		);
+	}
+
+	/**
+	 * Insert a new number into the database.
+	 */
+	public function addNewNumber($number, $type)
+	{	
+    	if(self::model()->findByPk($number) == NULL){
+    		$model = new Phoneinfo;
+		    $model->phoneNumber = $number;
+	    	$model->phoneType = $type;
+	    	$model->save();
+    	}
+	}
+
+	/**
+	 * Delete a number into the database.
+	 */
+	public function deleteNumber($number)
+	{	
+    	if(self::model()->findByPk($number) !== NULL){
+    		self::model()->deleteByPk($number);
+    	}
 	}
 
 	/**
@@ -79,9 +102,8 @@ class People extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('pId',$this->pId);
-		$criteria->compare('lastName',$this->lastName,true);
-		$criteria->compare('firstName',$this->firstName,true);
+		$criteria->compare('phoneNumber',$this->phoneNumber,true);
+		$criteria->compare('phoneType',$this->phoneType,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -92,7 +114,7 @@ class People extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return People the static model class
+	 * @return Phoneinfo the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

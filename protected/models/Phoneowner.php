@@ -5,23 +5,25 @@
  *
  * The followings are the available columns in table 'phoneowner':
  * @property integer $pId
- * @property string $phoneNumber
+ * @property integer $phoneId
+ *
+ * The followings are the available model relations:
+ * @property People $p
+ * @property Phoneinfo $phone
  */
 class Phoneowner extends CActiveRecord
 {
-	/* Set up constant tablename to save memory */
-	const tablename = 'phoneowner';
 	public $firstName;
 	public $lastName;
+	public $phoneNumber;
 	public $phoneType;
-
 
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return self::tablename;
+		return 'phoneowner';
 	}
 
 	/**
@@ -33,10 +35,10 @@ class Phoneowner extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('firstName, lastName, phoneType, phoneNumber', 'required'),
+			array('lastName, firstName', 'length', 'max'=>50),
 			array('phoneNumber', 'length', 'max'=>20),
 			array('phoneNumber', 'numerical', 'on'=>array('insert', 'update')),
-			array('firstName', 'is_exist'),
-			
+			//array('firstName', 'checkDuplicate'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('firstName, lastName, phoneNumber, phoneType', 'safe', 'on'=>'search'),
@@ -51,10 +53,8 @@ class Phoneowner extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'getowners'=>array(self::BELONGS_TO, 'People',
-                'pId'),
-			'getnumbers'=>array(self::BELONGS_TO, 'Phoneinfo',
-                'phoneNumber'),
+			'p' => array(self::BELONGS_TO, 'People', 'pId'),
+			'phone' => array(self::BELONGS_TO, 'Phoneinfo', 'phoneId'),
 		);
 	}
 
@@ -65,134 +65,27 @@ class Phoneowner extends CActiveRecord
 	{
 		return array(
 			'pId' => 'P',
-			'phoneNumber' => 'Phone Number',
+			'phoneId' => 'Phone',
 		);
 	}
 
 	/**
 	 * Check if the contact has already existed.
-	 * This is the 'is_exist' validator as declared in rules().
 	 */
-	public function is_exist($attribute,$params)
+	public function checkDuplicate()
 	{
 		$person = People::model()->findByAttributes(array('firstName'=>$this->firstName,'lastName'=>$this->lastName));
-		if ($person) {
+		$number = Phoneinfo::model()->findByAttributes(array('phoneNumber'=>$this->phoneNumber));
+		if ($person && $number) {
 			$pId = $person->getPrimaryKey();
-			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneNumber'=>$this->phoneNumber));
+			$phoneId = $number->getPrimaryKey();
+			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneId'=>$phoneId));
 			if($contact){
-				$this->addError('firstName', 'This contact already exists.');
+				return false;
+				//$this->addError('message', 'This contact already exists.');
 			}
 		} else {
 			return true;
-		}
-	}
-
-	/**
-	 * Insert a new contact into the database.
-	 * According to 4 cases
-	 */
-	public function addNewContact()
-	{
-		
-		$model=new Phoneowner;
-		$transaction=$model->dbConnection->beginTransaction();
-		try
-		{
-		    // Save into 3 tables may be intervened by another request
-		    // we therefore use a transaction to ensure consistency and integrity	
-	    	/* Save into table phoneinfo */
-	    	Phoneinfo::model()->addNewNumber($this->phoneNumber, $this->phoneType);
-	    	/* Save into table people */
-	    	$pId = People::model()->addNewOwner($this->firstName, $this->lastName);
-	    	/* Save into table phoneowner */
-	    	// Not sure if this is the right way to save relational data.
-	    	$model->firstName = $this->firstName;
-	    	$model->lastName = $this->lastName;
-	    	$model->phoneType = $this->phoneType;
-
-	    	$model->pId = $pId;
-	    	$model->phoneNumber = $this->phoneNumber;
-	    	if($model->save())
-	    	{
-		        $transaction->commit();
-		    }
-		    else{
-		    	Yii::log("errors saving phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
-		    	$transaction->rollback();
-		    }     
-		}
-		catch(Exception $e)
-		{
-		    $transaction->rollback();
-		    throw $e;
-		}
-	}
-
-	/**
-	 * Update a contact in the database.
-	 */
-	public function updateContact($id, $number)
-	{
-		
-		$model=self::model();
-		$transaction=$model->dbConnection->beginTransaction();
-		try
-		{
-			$people = $model->findAllByAttributes(array('pId'=>$id));
-		    if(count($people) == 1){
-		    	People::model()->deleteOwner($id);
-		    }
-		    $numbers = $model->findAllByAttributes(array('phoneNumber'=>$number));
-		    if(count($numbers) == 1){
-		    	Phoneinfo::model()->deleteNumber($number);
-		    }
-	    	if($model->deleteByPk(array('pId'=>$id, 'phoneNumber'=>$number)))
-	    	{
-		        $transaction->commit();
-		    }
-		    else{
-		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
-		    	$transaction->rollback();
-		    }     
-		}
-		catch(Exception $e)
-		{
-		    $transaction->rollback();
-		    throw $e;
-		}
-	}
-
-	/**
-	 * Delete a contact from the database.
-	 */
-	public function deleteContact($id, $number)
-	{
-		
-		$model=self::model();
-		$transaction=$model->dbConnection->beginTransaction();
-		try
-		{
-			$people = $model->findAllByAttributes(array('pId'=>$id));
-		    if(count($people) == 1){
-		    	People::model()->deleteOwner($id);
-		    }
-		    $numbers = $model->findAllByAttributes(array('phoneNumber'=>$number));
-		    if(count($numbers) == 1){
-		    	Phoneinfo::model()->deleteNumber($number);
-		    }
-	    	if($model->deleteByPk(array('pId'=>$id, 'phoneNumber'=>$number)))
-	    	{
-		        $transaction->commit();
-		    }
-		    else{
-		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
-		    	$transaction->rollback();
-		    }     
-		}
-		catch(Exception $e)
-		{
-		    $transaction->rollback();
-		    throw $e;
 		}
 	}
 
@@ -216,10 +109,9 @@ class Phoneowner extends CActiveRecord
 
 		$criteria->compare('firstName',$this->firstName,true);
 		$criteria->compare('lastName',$this->lastName,true);
-		// default table alias is 't'. Specify 't' because phoneNumber exists in both people table and phoneowner table
-		$criteria->compare('t.phoneNumber',$this->phoneNumber,true);
+		$criteria->compare('phonphoneNumber',$this->phoneNumber,true);
 		$criteria->compare('phoneType',$this->phoneType,true);
-		$criteria->with = array('getowners', 'getnumbers');
+		$criteria->with = array('p', 'phone');
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -227,18 +119,21 @@ class Phoneowner extends CActiveRecord
 	            'defaultOrder' => 'firstName',
 	            'attributes' => array(
 	                'firstName' => array(
-	                    'asc' => 'getowners.firstName',
-	                    'desc' => 'getowners.firstName desc',
+	                    'asc' => 'p.firstName',
+	                    'desc' => 'p.firstName desc',
 	                ),
 	                'lastName' => array(
-	                    'asc' => 'getowners.lastName',
-	                    'desc' => 'getowners.lastName desc',
+	                    'asc' => 'p.lastName',
+	                    'desc' => 'p.lastName desc',
+	                ),
+	                'phoneNumber' => array(
+	                    'asc' => 'phone.phoneNumber',
+	                    'desc' => 'phone.phoneNumber desc',
 	                ),
 	                'phoneType' => array(
-	                    'asc' => 'getnumbers.phoneType',
-	                    'desc' => 'getnumbers.phoneType desc',
+	                    'asc' => 'phone.phoneType',
+	                    'desc' => 'phone.phoneType desc',
 	                ),
-	                '*'
 	            ),
 	        ),
 		));

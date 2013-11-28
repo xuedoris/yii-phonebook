@@ -46,6 +46,9 @@ class PhonebookController extends Controller
 		if(isset($_POST['ajax']) && $_POST['ajax']==='addnew-form')
 		{
 			echo CActiveForm::validate($model);
+			
+			if(!$model->checkDuplicate())
+				$model->addError('This contact already exists.');
 			Yii::app()->end();
 		}
 		// collect user input data
@@ -54,7 +57,7 @@ class PhonebookController extends Controller
 			$model->attributes=$_POST['Phoneowner'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate()){
-				$model->addNewContact();
+				//$model->addNewContact();
 				echo CJSON::encode(array(
                       'status'=>'success'
                  ));
@@ -78,10 +81,8 @@ class PhonebookController extends Controller
 			$model->attributes=$_POST['Phoneowner'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate()){
-				$model->addNewContact();
-				echo CJSON::encode(array(
-                      'status'=>'success'
-                 ));
+				$model->updateContact();
+				
                 Yii::app()->end();
 			}
 		}
