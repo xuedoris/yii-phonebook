@@ -11,7 +11,7 @@
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
-	<p><?php echo $form->errorSummary($model);?></p>
+	<p><?php //echo CHerrorSummary($model);?></p>
 	<div class="errorMessage" id="formResult"></div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'firstName'); ?>
@@ -40,30 +40,29 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Add contact'); ?>
-		<?php /*echo CHtml::ajaxSubmitButton('Add contact',CHtml::normalizeUrl(array('phonebook/addnew','render'=>true)),
+		<?php //echo CHtml::submitButton('Add contact'); ?>
+		<?php echo CHtml::ajaxSubmitButton('Add contact',CHtml::normalizeUrl(array('phonebook/addnew','render'=>true)),
                  array(
                      'dataType'=>'json',
                      'type'=>'post',
                      'success'=>'function(data) {
                          $("#AjaxLoader").hide();
-                         console.log("data"+data);
-                         /*
-                        if(data.status=="success"){
+                        if(data && data.status=="success"){
 	                        $("#formResult").html("Contact added successfully.");
 	                        $("#addnew-form")[0].reset();
 	                        $("#grid-form").yiiGridView("update");
                         } else {
-	                        $.each(data, function(key, val) {
+                        	$("#formResult").html(data);
+	                        /*$.each(data, function(key, val) {
 	                        	$("#addnew-form #"+key+"_em_").text(val);                                                    
 	                        	$("#addnew-form #"+key+"_em_").show();
-	                        });
+	                        });*/
                         }   
                     }',                    
                      'beforeSend'=>'function(){                        
                            $("#AjaxLoader").show();
                       }'
-                     ),array('id'=>'mybtn','class'=>'class1 class2')); */
+                     ),array('id'=>'mybtn','class'=>'class1 class2'));
         ?>
 		<?php echo CHtml::resetButton('Reset'); ?>
 		<div id="AjaxLoader" style="display: none"><img src="<?php echo Yii::app()->request->baseUrl; ?>/images/loading.gif"></img></div>

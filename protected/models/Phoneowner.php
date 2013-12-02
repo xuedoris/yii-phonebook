@@ -81,8 +81,8 @@ class Phoneowner extends CActiveRecord
 			$phoneId = $number->getPrimaryKey();
 			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneId'=>$phoneId));
 			if($contact){
+				//self::model()->addError('This contact already exists.');
 				return false;
-				//$this->addError('message', 'This contact already exists.');
 			}
 		} else {
 			return true;
