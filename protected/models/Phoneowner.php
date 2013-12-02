@@ -89,6 +89,118 @@ class Phoneowner extends CActiveRecord
 	}
 
 	/**
+	 * Insert a new contact into the database.
+	 * According to 4 cases
+	 */
+	public function addNewContact()
+	{
+		
+		$model=new Phoneowner;
+		$transaction=$model->dbConnection->beginTransaction();
+		try
+		{
+		    // Save into 3 tables may be intervened by another request
+		    // we therefore use a transaction to ensure consistency and integrity	
+	    	/* Save into table phoneinfo */
+	    	$phoneId = Phoneinfo::model()->addNewNumber($this->phoneNumber, $this->phoneType);
+	    	/* Save into table people */
+	    	$pId = People::model()->addNewOwner($this->firstName, $this->lastName);
+	    	// Save into table phoneowner 
+	    	// Not sure if this is the right way to save relational data.
+	    	$model->firstName = $this->firstName;
+	    	$model->lastName = $this->lastName;
+	    	$model->phoneNumber = $this->phoneNumber;
+	    	$model->phoneType = $this->phoneType;
+
+	    	$model->pId = $pId;
+	    	$model->phoneId = $phoneId;
+	    	if($model->save())
+	    	{
+		        $transaction->commit();
+		    }
+		    else{
+		    	Yii::log("errors saving phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    	$transaction->rollback();
+		    }     
+		}
+		catch(Exception $e)
+		{
+		    $transaction->rollback();
+		    throw $e;
+		}
+	}
+
+	/**
+	 * Update a contact in the database.
+	 */
+	public function updateContact()
+	{
+		
+		$model=self::model();
+		$transaction=$model->dbConnection->beginTransaction();
+		try
+		{
+			$model()->updateAll(array('phoneNumber'=>$this->phoneNumber),'phoneNumber="'.$this->pId.'"');
+		    if(count($people) == 1){
+		    	People::model()->deleteOwner($id);
+		    }
+		    $numbers = $model->findAllByAttributes(array('phoneNumber'=>$number));
+		    if(count($numbers) == 1){
+		    	Phoneinfo::model()->deleteNumber($number);
+		    }
+	    	if($model->deleteByPk(array('pId'=>$id, 'phoneNumber'=>$number)))
+	    	{
+		        $transaction->commit();
+		    }
+		    else{
+		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    	$transaction->rollback();
+		    }     
+		}
+		catch(Exception $e)
+		{
+		    $transaction->rollback();
+		    throw $e;
+		}
+	}
+
+
+	/**
+	 * Delete a contact from the database.
+	 */
+	public function deleteContact($id, $phoneId)
+	{
+		
+		$model=self::model();
+		$transaction=$model->dbConnection->beginTransaction();
+		try
+		{
+			$people = $model->findAllByAttributes(array('pId'=>$id));
+			$numbers = $model->findAllByAttributes(array('phoneId'=>$phoneId));
+			if($model->deleteByPk(array('pId'=>$id, 'phoneId'=>$phoneId)))
+	    	{
+		        if(count($people) == 1){
+			    	People::model()->deleteOwner($id);
+			    }
+			    
+			    if(count($numbers) == 1){
+			    	Phoneinfo::model()->deleteNumber($phoneId);
+			    }
+		        $transaction->commit();
+		    } else {
+		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    	$transaction->rollback();
+		    }     
+		}
+		catch(Exception $e)
+		{
+		    $transaction->rollback();
+		    throw $e;
+		}
+	}
+
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:

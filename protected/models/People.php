@@ -62,6 +62,36 @@ class People extends CActiveRecord
 	}
 
 	/**
+	 * Insert a new owner into the database.
+	 */
+	public function addNewOwner($first, $last)
+	{
+	    $owner = self::model()->findByAttributes(array('firstName'=>$first,'lastName'=>$last));
+    	
+    	if($owner){
+    		return $owner->getPrimaryKey();
+    	} else{
+    		$model = new People;
+	    	$model->firstName = $first;
+	    	$model->lastName = $last;
+	    	if($model->save()){
+	    		return $model->pId;
+	    	}
+    	}
+    	return null;
+	}
+
+	/**
+	 * Delete a owner from the database.
+	 */
+	public function deleteOwner($pId)
+	{
+	    if(self::model()->findByPk($pId) !== NULL){
+    		self::model()->deleteByPk($pId);
+    	}
+	}
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:

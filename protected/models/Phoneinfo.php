@@ -63,6 +63,36 @@ class Phoneinfo extends CActiveRecord
 	}
 
 	/**
+	 * Insert a new number into the database.
+	 */
+	public function addNewNumber($number, $type)
+	{
+	    $numberItem = self::model()->findByAttributes(array('phoneNumber'=>$number));
+    	
+    	if($numberItem){
+    		return $numberItem->getPrimaryKey();
+    	} else{
+    		$model = new Phoneinfo;
+		    $model->phoneNumber = $number;
+	    	$model->phoneType = $type;
+	    	if($model->save()){
+	    		return $model->phoneId;
+	    	}
+    	}
+    	return null;
+	}
+
+	/**
+	 * Delete a number into the database.
+	 */
+	public function deleteNumber($phoneId)
+	{	
+    	if(self::model()->findByPk($phoneId) !== NULL){
+    		self::model()->deleteByPk($phoneId);
+    	}
+	}
+
+	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 *
 	 * Typical usecase:

@@ -1,4 +1,4 @@
-var updateContact = function (data) {
+var updateContact = function (data) {	
 	$(data).siblings('.save').removeClass('hidden');
 	$(data).parent().siblings().not(".phoneType").each(function (){
 		var currentHtml = $(this).html();
@@ -12,22 +12,27 @@ var updateContact = function (data) {
 		$(this).find('select').val(currentHtml);
 		//console.log($(this));
 	});
-	$('.save').click(function () {
-		$(this).parent().siblings().each(function (){
-			var newHtml = $(this).find('input').val();
-			//console.log(newHtml);
-			//Just update everything every time.
-			$(this).empty().html(newHtml);
+
+	$('.save').click(function (event) {
+		event.preventDefault();
+		var url = $(this).attr('href');
+		var ajaxData = {};
+		$(this).parent().siblings().not(".phoneType").each(function (){
+			var inputName = $(this).find('input').attr('name');
+			ajaxData[inputName] = $(this).find('input').val();
 		});
+		$(this).parent().siblings(".phoneType").each(function (){
+			var selectName = $(this).find('select').attr('name');
+			ajaxData[selectName] = $(this).find('select').val()
+		});
+		console.log(ajaxData);
 		$(this).addClass('hidden');
-		$('#grid-form').yiiGridView('update', {
-            type:'POST',
-            url:$(this).attr('href'),
-            success:function(data) {
-                  $('#grid-form').yiiGridView('update');
-            }
-        });
-		return false;
+		$.post( url, ajaxData ).done(function() {
+		    $("#grid-form").yiiGridView("update");
+		}).fail(function() {
+		    alert( "error" );
+		});
+		
 	});
 }
 
