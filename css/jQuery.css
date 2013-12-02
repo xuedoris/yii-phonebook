@@ -9,5 +9,11 @@
 }
 #para {
 	width: 300px;
+	height: 100px;
 	border: 1px solid #555;
+	overflow: scroll;
+}
+#floating{
+	border: 1px solid #555;
+	position: relative;
 }

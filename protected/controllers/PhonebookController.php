@@ -42,26 +42,21 @@ class PhonebookController extends Controller
 	public function actionAddnew()
 	{
 		$model = new Phoneowner;
-		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='addnew-form')
-		{
-			echo CActiveForm::validate($model);
-			
-			if(!$model->checkDuplicate())
-				$model->addError('This contact already exists.');
-			Yii::app()->end();
-		}
+
 		// collect user input data
 		if(isset($_POST['Phoneowner']))
 		{
 			$model->attributes=$_POST['Phoneowner'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate()){
-				//$model->addNewContact();
+				$model->addNewContact();
 				echo CJSON::encode(array(
                       'status'=>'success'
                  ));
                 Yii::app()->end();
+			} else {
+				echo CActiveForm::validate($model);
+				Yii::app()->end();
 			}
 		}
 	}

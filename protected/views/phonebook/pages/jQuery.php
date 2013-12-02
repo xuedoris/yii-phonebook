@@ -10,6 +10,7 @@ $cssPath = Yii::app()->baseUrl.'/css/jQuery.css';
 Yii::app()->clientScript->registerCSSFile($cssPath);
 Yii::app()->YiiBalls->register();
 ?>
+<div id="floating">I'm floating!!!</div>
 <h1>jQuery Play Zone</h1>
 <button id="trigger">Trigger</button>
 <p id="para">This page is for Xueyuan to learn and practice jQuery. Curabitur risus nisi, tempus vitae tortor et, dignissim malesuada erat. Ut blandit condimentum ligula, non pharetra lorem laoreet a. Duis volutpat orci a dolor ultricies sollicitudin. Nunc sollicitudin mattis ipsum non blandit.</p>
@@ -66,7 +67,14 @@ jQuery(document).ready( function () {
 	jQuery('#trigger').click( function (){
 		jQuery('#para').stop().slideToggle(1000);
 	});
-
+	
+	jQuery(window).scroll(function (){
+		jQuery('#floating').stop().animate({
+			'top':$(document).scrollTop()
+		});
+	});
+	//console.log(jQuery('#floating').css('top') + ' '+jQuery('#floating').css('left'));
+	
 	/**Write and Change**/
 	jQuery('.change').dblclick( function (){
 		var currentHtml = jQuery(this).html();
