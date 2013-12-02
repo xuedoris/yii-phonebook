@@ -38,7 +38,7 @@ class Phoneowner extends CActiveRecord
 			array('lastName, firstName', 'length', 'max'=>50),
 			array('phoneNumber', 'length', 'max'=>20),
 			array('phoneNumber', 'numerical', 'on'=>array('insert', 'update')),
-			//array('firstName', 'checkDuplicate'),
+			array('phoneType', 'checkDuplicate'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('firstName, lastName, phoneNumber, phoneType', 'safe', 'on'=>'search'),
@@ -81,8 +81,7 @@ class Phoneowner extends CActiveRecord
 			$phoneId = $number->getPrimaryKey();
 			$contact = self::model()->findByAttributes(array('pId'=>$pId,'phoneId'=>$phoneId));
 			if($contact){
-				//self::model()->addError('This contact already exists.');
-				return false;
+				$this->addError('phoneType', 'This contact already exists.');
 			}
 		} else {
 			return true;

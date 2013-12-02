@@ -11,8 +11,8 @@
 )); ?>
 
 	<p class="note">Fields with <span class="required">*</span> are required.</p>
-	<p><?php //echo CHerrorSummary($model);?></p>
-	<div class="errorMessage" id="formResult"></div>
+	<p><?php echo $form->errorSummary($model);?></p>
+	<div class="errorMessage" id="formResult"><ul></ul></div>
 	<div class="row">
 		<?php echo $form->labelEx($model,'firstName'); ?>
 		<?php echo $form->textField($model,'firstName'); ?>
@@ -46,17 +46,19 @@
                      'dataType'=>'json',
                      'type'=>'post',
                      'success'=>'function(data) {
-                         $("#AjaxLoader").hide();
+                        $("#AjaxLoader").hide();
                         if(data && data.status=="success"){
 	                        $("#formResult").html("Contact added successfully.");
 	                        $("#addnew-form")[0].reset();
 	                        $("#grid-form").yiiGridView("update");
                         } else {
-                        	$("#formResult").html(data);
 	                        /*$.each(data, function(key, val) {
 	                        	$("#addnew-form #"+key+"_em_").text(val);                                                    
 	                        	$("#addnew-form #"+key+"_em_").show();
 	                        });*/
+	                        $.each(data, function(key, val) {
+	                        	$("#formResult").html("<li>"+val+"</li>");
+	                        });
                         }   
                     }',                    
                      'beforeSend'=>'function(){                        
