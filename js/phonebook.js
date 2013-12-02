@@ -25,10 +25,17 @@ var updateContact = function (data) {
 			var selectName = $(this).find('select').attr('name');
 			ajaxData[selectName] = $(this).find('select').val()
 		});
-		console.log(ajaxData);
+		//console.log(ajaxData);
 		$(this).addClass('hidden');
-		$.post( url, ajaxData ).done(function() {
-		    $("#grid-form").yiiGridView("update");
+		$.post( url, ajaxData ).done(function(data) {
+			if(data && data.status=="success"){
+                $("#grid-form").yiiGridView("update");
+            } else {
+                $.each(data, function(key, val) {
+                	$("#updateResult").html("<li>"+val+"</li>");
+                });
+            }
+		    
 		}).fail(function() {
 		    alert( "error" );
 		});

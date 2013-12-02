@@ -7,7 +7,9 @@ $jsPath = Yii::app()->baseUrl.'/js/phonebook.js';
 Yii::app()->clientScript->registerScriptFile($jsPath);
 
 // This page contains the contact list will be refreshed after each operation.-->
-
+?>
+<div class="errorMessage" id="updateResult"><ul></ul></div>
+<?php 
 $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'grid-form',
     'dataProvider'=>$model->search(),

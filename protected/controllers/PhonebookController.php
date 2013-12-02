@@ -68,17 +68,20 @@ class PhonebookController extends Controller
 		$model = new Phoneowner;
 
 		// collect user input data
-		if(isset($_GET['Phoneowner']))
+		if(isset($_POST['Phoneowner']))
 		{
-			print_r($_GET['Phoneowner']);
-			/*
 			$model->attributes=$_POST['Phoneowner'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate()){
 				$model->updateContact();
-				
+				echo CJSON::encode(array(
+                      'status'=>'success'
+                 ));
                 Yii::app()->end();
-			}*/
+			} else {
+				echo CActiveForm::validate($model);
+				Yii::app()->end();
+			}
 		}
 	}
 
