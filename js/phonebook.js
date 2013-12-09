@@ -28,12 +28,16 @@ var updateContact = function (data) {
 		//console.log(ajaxData);
 		$(this).addClass('hidden');
 		$.post( url, ajaxData ).done(function(data) {
+			var data = JSON.parse(data);
 			if(data && data.status=="success"){
+				$("#updateResult").html("<li>Update successfully!</li>");
                 $("#grid-form").yiiGridView("update");
             } else {
+            	console.log(data);
                 $.each(data, function(key, val) {
                 	$("#updateResult").html("<li>"+val+"</li>");
                 });
+                $("#grid-form").yiiGridView("update");
             }
 		    
 		}).fail(function() {

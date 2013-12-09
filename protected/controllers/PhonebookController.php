@@ -73,7 +73,8 @@ class PhonebookController extends Controller
 			$model->attributes=$_POST['Phoneowner'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate()){
-				$model->updateContact();
+				$model->updateContact($id, $phoneId);
+
 				echo CJSON::encode(array(
                       'status'=>'success'
                  ));

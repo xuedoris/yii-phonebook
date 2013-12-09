@@ -133,27 +133,20 @@ class Phoneowner extends CActiveRecord
 	/**
 	 * Update a contact in the database.
 	 */
-	public function updateContact()
+	public function updateContact($id, $phoneId)
 	{
 		
 		$model=self::model();
 		$transaction=$model->dbConnection->beginTransaction();
 		try
 		{
-			$model()->updateAll(array('phoneNumber'=>$this->phoneNumber),'phoneNumber="'.$this->pId.'"');
-		    if(count($people) == 1){
-		    	People::model()->deleteOwner($id);
-		    }
-		    $numbers = $model->findAllByAttributes(array('phoneNumber'=>$number));
-		    if(count($numbers) == 1){
-		    	Phoneinfo::model()->deleteNumber($number);
-		    }
-	    	if($model->deleteByPk(array('pId'=>$id, 'phoneNumber'=>$number)))
+			$updatedPeople = People::model()->updateByPk($id, array('firstName'=>$this->firstName, 'lastName'=>$this->lastName));
+		    $updatedPhone = Phoneinfo::model()->updateByPk($phoneId,array('phoneNumber'=>$this->phoneNumber,'phoneType'=>$this->phoneType));
+	    	if($updatedPeople || $updatedPhone)
 	    	{
 		        $transaction->commit();
-		    }
-		    else{
-		    	Yii::log("errors deleting phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
+		    } else {
+		    	Yii::log("errors updating phoneowner: " . var_export($model->getErrors(), true), CLogger::LEVEL_WARNING, __METHOD__);
 		    	$transaction->rollback();
 		    }     
 		}
